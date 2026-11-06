@@ -1,0 +1,246 @@
+/* Estilos globais e tema Dark / Neón */
+:root {
+  --bg-color: #0b0f19;
+  --card-bg: rgba(20, 27, 45, 0.7);
+  --border-color: rgba(0, 229, 255, 0.2);
+  --primary-neon: #00e5ff;
+  --secondary-neon: #bd00ff;
+  --text-color: #e2e8f0;
+  --text-muted: #94a3b8;
+  --danger-color: #ff4757;
+  --success-color: #2ed573;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+}
+
+header h1 {
+  color: var(--primary-neon);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+.subtitle {
+  color: var(--secondary-neon);
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.student-info {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* Card de Login */
+.card-login {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 30px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(189, 0, 255, 0.15);
+}
+
+.card-login h2 {
+  color: var(--primary-neon);
+  margin-bottom: 10px;
+}
+
+.info-aluno-fixa {
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.campo-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.campo-grupo label {
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+input[type="password"],
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input[type="password"]:focus,
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: var(--primary-neon);
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+}
+
+button {
+  background: linear-gradient(135deg, var(--primary-neon), var(--secondary-neon));
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Status e Ações */
+.painel-acoes {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.mensagem-status {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.mensagem-status.sucesso { color: var(--success-color); }
+.mensagem-status.erro { color: var(--danger-color); }
+
+/* Grid de Cards */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card h3 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.card-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-neon);
+}
+
+.card-subtext {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--success-color);
+  margin-top: 5px;
+}
+
+/* Tabela Responsiva */
+.table-container {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th, td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+th {
+  background: rgba(0, 229, 255, 0.1);
+  color: var(--primary-neon);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+td input {
+  width: 60px;
+  padding: 5px;
+  text-align: center;
+}
+
+.situacao-bom {
+  color: var(--success-color);
+  font-weight: bold;
+}
+
+.situacao-atencao {
+  color: var(--danger-color);
+  font-weight: bold;
+}
+
+.situacao-indisponivel {
+  color: var(--text-muted);
+}
+
+.input-invalido {
+  border-color: var(--danger-color) !important;
+  box-shadow: 0 0 5px rgba(255, 71, 87, 0.5) !important;
+}
+
+.oculto {
+  display: none !important;
+}

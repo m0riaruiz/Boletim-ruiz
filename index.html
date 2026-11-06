@@ -16,50 +16,74 @@
       <p class="student-info">Estudante: <strong>Estudante Exemplo</strong></p>
     </header>
 
-    <!-- Área de cards de resumo -->
-    <section class="cards-grid">
-      <div class="card">
-        <h3>Média Geral</h3>
-        <p id="card-media-geral" class="card-value">—</p>
-      </div>
-      <div class="card">
-        <h3>Total de Faltas</h3>
-        <p id="card-total-faltas" class="card-value">—</p>
-      </div>
-      <div class="card">
-        <h3>Bom Desempenho</h3>
-        <p id="card-bom-desempenho" class="card-value">—</p>
-      </div>
-      <div class="card">
-        <h3>Atenção</h3>
-        <p id="card-atencao" class="card-value">—</p>
-      </div>
-      <div class="card">
-        <h3>Frequência</h3>
-        <p id="card-frequencia" class="card-value">92%</p>
-        <span class="card-subtext">Frequência adequada</span>
-      </div>
+    <!-- Tela de Acesso (PIN) -->
+    <section id="secao-login" class="card-login">
+      <h2>Acesso ao Boletim</h2>
+      <p class="info-aluno-fixa">Turma: <strong>9B</strong> | Chamada: <strong>23</strong></p>
+      <form id="form-login">
+        <div class="campo-grupo">
+          <label for="input-pin">Digite seu PIN:</label>
+          <input type="password" id="input-pin" maxlength="10" required autocomplete="off">
+        </div>
+        <button type="submit" id="btn-entrar">Entrar</button>
+      </form>
+      <p id="mensagem-login" class="mensagem-status"></p>
     </section>
 
-    <!-- Tabela responsiva de notas -->
-    <section class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Disciplina</th>
-            <th>1º Tri</th>
-            <th>2º Tri</th>
-            <th>3º Tri</th>
-            <th>Média</th>
-            <th>Faltas</th>
-            <th>Situação</th>
-          </tr>
-        </thead>
-        <!-- O corpo da tabela será preenchido pelo JavaScript -->
-        <tbody id="tabela-corpo">
-        </tbody>
-      </table>
-    </section>
+    <!-- Conteúdo do Boletim (Oculto até o login) -->
+    <main id="conteudo-boletim" class="oculto">
+      <!-- Painel de Ações -->
+      <div class="painel-acoes">
+        <button id="btn-alternar-edicao">Alterar dados</button>
+        <button id="btn-salvar" class="oculto">Salvar alterações</button>
+        <span id="mensagem-status-boletim" class="mensagem-status"></span>
+      </div>
+
+      <!-- Área de cards de resumo -->
+      <section class="cards-grid">
+        <div class="card">
+          <h3>Média Geral</h3>
+          <p id="card-media-geral" class="card-value">—</p>
+        </div>
+        <div class="card">
+          <h3>Total de Faltas</h3>
+          <p id="card-total-faltas" class="card-value">—</p>
+        </div>
+        <div class="card">
+          <h3>Bom Desempenho</h3>
+          <p id="card-bom-desempenho" class="card-value">—</p>
+        </div>
+        <div class="card">
+          <h3>Atenção</h3>
+          <p id="card-atencao" class="card-value">—</p>
+        </div>
+        <div class="card">
+          <h3>Frequência</h3>
+          <p id="card-frequencia" class="card-value">92%</p>
+          <span class="card-subtext">Frequência adequada</span>
+        </div>
+      </section>
+
+      <!-- Tabela responsiva de notas -->
+      <section class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Disciplina</th>
+              <th>1º Tri</th>
+              <th>2º Tri</th>
+              <th>3º Tri</th>
+              <th>Média</th>
+              <th>Faltas</th>
+              <th>Situação</th>
+            </tr>
+          </thead>
+          <!-- O corpo da tabela será preenchido pelo JavaScript -->
+          <tbody id="tabela-corpo">
+          </tbody>
+        </table>
+      </section>
+    </main>
   </div>
 
   <!-- Vinculando o arquivo de script JavaScript -->
