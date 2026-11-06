@@ -195,4 +195,178 @@ function renderizarBoletim() {
 
       const tdSit = document.createElement("td");
       tdSit.textContent = situacaoTexto;
-      tdSit.
+      tdSit.className = situacaoClasse;
+      tr.appendChild(tdSit);
+    } else {
+      // Criação dos campos numéricos para modo de edição
+      tr.appendChild(criarTdInput(`n1-${index}`, item.tri1));
+      tr.appendChild(criarTdInput(`n2-${index}`, item.tri2));
+      tr.appendChild(criarTdInput(`n3-${index}`, item.tri3));
+
+      const tdMedia = document.createElement("td");
+      tdMedia.textContent = media !== null ? media.toFixed(1).replace(".", ",") : "—";
+      tr.appendChild(tdMedia);
+
+      tr.appendChild(criarTdInputFaltas(`f1-${index}`, faltasArray[0]));
+
+      const tdSit = document.createElement("td");
+      tdSit.textContent = situacaoTexto;
+      tdSit.className = situacaoClasse;
+      tr.appendChild(tdSit);
+    }
+
+    tabelaCorpo.appendChild(tr);
+  });
+
+  // Atualização dos cards de resumo
+  const cardMedia = document.getElementById("card-media-geral");
+  if (qtdDisciplinasComMedia > 0) {
+    const mediaGeral = somaMedias / qtdDisciplinasComMedia;
+    cardMedia.textContent = mediaGeral.toFixed(1).replace(".", ",");
+  } else {
+    cardMedia.textContent = "—";
+  }
+
+  document.getElementById("card-total-faltas").textContent = totalFaltasGeral;
+  document.getElementById("card-bom-desempenho").textContent = qtdBomDesempenho;
+  document.getElementById("card-atencao").textContent = qtdAtencao;
+
+  // Nota: A frequência percentual abaixo é FICTÍCIA / DEMONSTRATIVA nesta etapa.
+  document.getElementById("card-frequencia").textContent = "92%";
+}
+
+// Cria célula com campo de entrada de texto/nota
+function criarTdInput(id, valorAtual) {
+  const td = document.createElement("td");
+  const input = document.createElement("input");
+  input.type = "text";
+  input.id = id;
+  const n = normalizarNota(valorAtual);
+  input.value = n !== null ? n.toString().replace(".", ",") : "";
+  td.appendChild(input);
+  return td;
+}
+
+// Cria célula com campo de entrada para faltas
+function criarTdInputFaltas(id, valorFalta) {
+  const td = document.createElement("td");
+  const input = document.createElement("input");
+  input.type = "number";
+  input.id = id;
+  input.value = valorFalta !== undefined && valorFalta !== null ? valorFalta : 0;
+  td.appendChild(input);
+  return td;
+}
+
+// Botão para alternar entre modo visualização e edição
+btnAlternarEdicao.addEventListener("click", function () {
+  emModoEdicao = !emModoEdicao;
+  btnAlternarEdicao.textContent = emModoEdicao ? "Cancelar edição" : "Alterar dados";
+  if (emModoEdicao) {
+    btnSalvar.classList.remove("oculto");
+  } else {
+    btnSalvar.classList.add("oculto");
+    mensagemStatusBoletim.textContent = "";
+  }
+  renderizarBoletim();
+});
+
+// Validação estrita de nota digitada no formulário de edição (0 a 10 ou vazio)
+function validarNotaEditada(valorStr) {
+  if (!valorStr || valorStr.trim() === "") {
+    return { valido: true, valor: null };
+  }
+  const strLimpa = valorStr.trim().replace(",", ".");
+  const num = Number(strLimpa);
+  if (isNaN(num) || num < 0 || num > 10) {
+    return { valido: false, valor: null };
+  }
+  return { valido: true, valor: num };
+}
+
+// Validação de falta digitada (inteiro >= 0)
+function validarFaltaEditada(valorStr) {
+  if (valorStr === "" || valorStr === null || valorStr === undefined) {
+    return { valido: false, valor: null };
+  }
+  const num = Number(valorStr);
+  if (isNaN(num) || !Number.isInteger(num) || num < 0) {
+    return { valido: false, valor: null };
+  }
+  return { valido: true, valor: num };
+}
+
+// Salva alterações via API PUT
+btnSalvar.addEventListener("click", function () {
+  let comErro = false;
+  let novasDisciplinas = [];
+
+  // Remove marcações de erro prévias nos inputs
+  document.querySelectorAll("input").forEach(inp => inp.classList.remove("input-invalido"));
+
+  disciplinasBoletim.forEach((item, index) => {
+    const inputT1 = document.getElementById(`n1-${index}`);
+    const inputT2 = document.getElementById(`n2-${index}`);
+    const inputT3 = document.getElementById(`n3-${index}`);
+    const inputF1 = document.getElementById(`f1-${index}`);
+
+    const valT1 = validarNotaEditada(inputT1.value);
+    const valT2 = validarNotaEditada(inputT2.value);
+    const valT3 = validarNotaEditada(inputT3.value);
+    const valF1 = validarFaltaEditada(inputF1.value);
+
+    if (!valT1.valido) { inputT1.classList.add("input-invalido"); comErro = true; }
+    if (!valT2.valido) { inputT2.classList.add("input-invalido"); comErro = true; }
+    if (!valT3.valido) { inputT3.classList.add("input-invalido"); comErro = true; }
+    if (!valF1.valido) { inputF1.classList.add("input-invalido"); comErro = true; }
+
+    novasDisciplinas.push({
+      disciplina: item.disciplina,
+      tri1: valT1.valor,
+      tri2: valT2.valor,
+      tri3: valT3.valor,
+      faltas: [valF1.valor !== null ? valF1.valor : 0, 0, 0]
+    });
+  });
+
+  if (comErro) {
+    mensagemStatusBoletim.textContent = "Verifique os campos destacados em vermelho.";
+    mensagemStatusBoletim.className = "mensagem-status erro";
+    return;
+  }
+
+  mensagemStatusBoletim.textContent = "Salvando...";
+  mensagemStatusBoletim.className = "mensagem-status";
+
+  fetch(`${CONFIG_ALUNO.apiUrl}/api/v1/boletins/salvar`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      turma: CONFIG_ALUNO.turma,
+      numero_chamada: CONFIG_ALUNO.numeroChamada,
+      pin: pinSessao,
+      dados: {
+        disciplinas: novasDisciplinas
+      }
+    })
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Erro ao salvar dados no servidor.");
+      }
+      return response.json();
+    })
+    .then(() => {
+      disciplinasBoletim = novasDisciplinas;
+      emModoEdicao = false;
+      btnAlternarEdicao.textContent = "Alterar dados";
+      btnSalvar.classList.add("oculto");
+      mensagemStatusBoletim.textContent = "Dados salvos com sucesso.";
+      mensagemStatusBoletim.className = "mensagem-status sucesso";
+      renderizarBoletim();
+    })
+    .catch(err => {
+      mensagemStatusBoletim.textContent = err.message || "Falha ao salvar. Tente novamente.";
+      mensagemStatusBoletim.className = "mensagem-status erro";
+    });
+});
